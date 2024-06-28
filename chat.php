@@ -19,14 +19,23 @@ if( isset( $data['msg'] ) ){
     $curl = curl_init();
     curl_setopt_array($curl, [
     // CURLOPT_PORT => "11434",
-    CURLOPT_URL => "http://localhost:11434/api/generate",
+    CURLOPT_URL => "http://localhost:11434/api/chat",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
     CURLOPT_TIMEOUT => 60,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS => json_encode( [ 'model' => 'openchat', 'stream' => false, "prompt" => $msg ] ),
+    CURLOPT_POSTFIELDS => json_encode( 
+        [ 
+            'model' => 'openchat', 
+            'stream' => false, 
+            "messages"=> [
+                "role" => "user",
+                "content" => $msg
+            ]
+        ] 
+    ),
     CURLOPT_HTTPHEADER => [
         "Content-Type: application/json"
     ],
