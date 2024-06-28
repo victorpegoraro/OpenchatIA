@@ -11,18 +11,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     return;
 }
 
-include_once('../rsc/config.php');
 $data = json_decode(file_get_contents('php://input'), true);
 if( isset( $data['msg'] ) ){
 
     $curl = curl_init();
     curl_setopt_array($curl, [
-    CURLOPT_PORT => "11434",
+    // CURLOPT_PORT => "11434",
     CURLOPT_URL => "http://localhost:11434/api/generate",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 30,
+    CURLOPT_TIMEOUT => 60,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => "POST",
     CURLOPT_POSTFIELDS => json_encode( [ 'model' => 'openchat', 'stream' => false, "prompt" => $data['msg'] ] ),
