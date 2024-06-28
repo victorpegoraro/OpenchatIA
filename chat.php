@@ -31,8 +31,10 @@ if( isset( $data['msg'] ) ){
             'model' => 'openchat', 
             'stream' => false, 
             "messages"=> [
-                "role" => "user",
-                "content" => $msg
+                [
+                    "role" => "user",
+                    "content" => $msg
+                ]
             ]
         ] 
     ),
