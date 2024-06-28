@@ -25,10 +25,9 @@ if( isset( $data['msg'] ) ){
     CURLOPT_TIMEOUT => 30,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS => json_encode( [ 'model' => 'openchat', 'stream' => false, "prompt" => "Olá" ] ),
+    CURLOPT_POSTFIELDS => json_encode( [ 'model' => 'openchat', 'stream' => false, "prompt" => $data['msg'] ] ),
     CURLOPT_HTTPHEADER => [
-        "Content-Type: application/json",
-        "User-Agent: insomnia/9.3.0"
+        "Content-Type: application/json"
     ],
     ]);
 
