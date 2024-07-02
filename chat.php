@@ -28,7 +28,7 @@ if( isset( $data['msg'] ) ){
     CURLOPT_CUSTOMREQUEST => "POST",
     CURLOPT_POSTFIELDS => json_encode( 
         [ 
-            'model' => 'openchat', 
+            'model' => 'llama3', 
             'stream' => false, 
             "messages"=> [
                 [
