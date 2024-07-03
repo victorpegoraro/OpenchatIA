@@ -12,35 +12,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $data = json_decode(file_get_contents('php://input'), true);
-if( isset( $data['msg'] ) ){
-
+if (isset($data['msg'])) {
     $msg = "Em poucas palavras : " .  $data['msg'];
 
     $curl = curl_init();
     curl_setopt_array($curl, [
-    // CURLOPT_PORT => "11434",
-    CURLOPT_URL => "http://localhost:11434/api/chat",
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => "",
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 60,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => "POST",
-    CURLOPT_POSTFIELDS => json_encode( 
-        [ 
-            'model' => 'llama3', 
-            'stream' => false, 
-            "messages"=> [
-                [
-                    "role" => "user",
-                    "content" => $msg
+        CURLOPT_URL => "http://localhost:11434/api/chat",
+        CURLOPT_RETURNTRANSFER => false,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 60,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => json_encode(
+            [
+                'model' => 'llama3',
+                'stream' => true,
+                "messages" => [
+                    [
+                        "role" => "user",
+                        "content" => $msg
+                    ]
                 ]
             ]
-        ] 
-    ),
-    CURLOPT_HTTPHEADER => [
-        "Content-Type: application/json"
-    ],
+        ),
+        CURLOPT_HTTPHEADER => [
+            "Content-Type: application/json"
+        ],
+        CURLOPT_WRITEFUNCTION => function ($curl, $data) {
+            echo $data;
+            ob_flush();
+            flush();
+            return strlen($data);
+        }
     ]);
 
     $response = curl_exec($curl);
@@ -52,14 +56,12 @@ if( isset( $data['msg'] ) ){
     if ($err) {
         echo "cURL Error #:" . $err;
     } else {
-        //echo $response;
-        $code = $http_code;
-        $json = json_decode( $response, true );
+        if ($http_code !== 200) {
+            http_response_code($http_code);
+        }
     }
-}else{
-    $code = 400;
-    $json = array( 'error'=> 'wrong values');
+} else {
+    http_response_code(400);
+    echo json_encode(['error' => 'wrong values']);
 }
-header('Content-Type: application/json; charset=utf-8');
-http_response_code($code);
-echo json_encode($json);
+?>
