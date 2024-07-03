@@ -27,7 +27,7 @@ if (isset($data['msg'])) {
         CURLOPT_POSTFIELDS => json_encode(
             [
                 'model' => 'llama3',
-                'stream' => true,
+                'stream' => false,
                 "messages" => [
                     [
                         "role" => "user",
